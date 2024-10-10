@@ -133,18 +133,13 @@ const DeltaRobotSimulation = () => {
       <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid black' }} />
       <Card style={{ width: '100%', maxWidth: 800, marginTop: 20 }}>
         <CardFooter style={{ marginTop: '1.5rem', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', width: '100%', marginBottom: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns : 'auto auto', gap : '1rem' , width: '100%'}}>
             <Slider value={[angle1]} min={0} max={180} step={1} onValueChange={(value) => setAngle1(value[0])} />
-            <Slider value={[angle2]} min={0} max={180} step={1} onValueChange={(value) => setAngle2(value[0])} style={{ marginLeft: '1rem' }} />
+            <Slider value={[angle2]} min={0} max={180} step={1} onValueChange={(value) => setAngle2(value[0])} />
+            <Slider value={[baseWidth]} min={200} max={600} step={10} onValueChange={(value) => setBaseWidth(value[0])} />
+            <Slider value={[baseWidth]} min={200} max={600} step={10} onValueChange={(value) => setBaseWidth(value[0])} />
+            <Slider value={[baseWidth]} min={200} max={600} step={10} onValueChange={(value) => setBaseWidth(value[0])} />
           </div>
-          <Slider 
-            value={[baseWidth]} 
-            min={200} 
-            max={600} 
-            step={10} 
-            onValueChange={(value) => setBaseWidth(value[0])} 
-            style={{ width: '100%' }}
-          />
         </CardFooter>
       </Card>
     </div>
