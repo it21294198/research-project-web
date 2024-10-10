@@ -103,3 +103,19 @@ next-app/
     ```
     npx shadcn@latest add breadcrumb
     ```
+
+```
+    servo 1    :   :     servo 2
+               /   \
+    arm 1 top /     \     arm 2 top
+             /       \
+            .         .
+             \       /
+              \     /
+               \   /
+arm 1 bottom    \ /     arm 2 bottom
+                 .
+
+consider (.) as free rotatable pint to servo 1 and 2 angle changes.
+consider (:) as a servo motor.
+```

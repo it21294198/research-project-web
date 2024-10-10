@@ -1,113 +1,95 @@
-"use client"; // Mark the component as a Client Component
-import React, { useEffect, useRef, useState } from 'react';
-import { Slider } from "@/components/ui/slider";
-import {
-  Card,
-  CardFooter,
-} from "@/components/ui/card";
+'use client'
+import React, { useRef, useState, useEffect } from 'react';
 
-type AdjacentArm = {
-  x : number,
-  y : number
-}
+const DeltaArmSimulationWeb = () => {
+  const canvasRef = useRef(null);
+  const [redDotPosition, setRedDotPosition] = useState({ x: 150, y: 150 });
+  const armLength = 100; // Length of the arms
+  const baseX = 150; // Base X position for arms
+  const baseY = 100; // Base Y position for arms
 
-export default function Canvas2D() {
-  const [slider1, setSlider1] = useState(0);
-  const [slider2, setSlider2] = useState(0);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // Function to calculate the angles of the arms
+  const calculateAngles = (x, y) => {
+    const dx = x - baseX;
+    const dy = y - baseY;
+    const distance = Math.sqrt(dx * dx + dy * dy);
 
+    // Check if the red dot is within reach
+    if (distance > 2 * armLength) {
+      console.error("Out of reach");
+      return { angleLeft: 0, angleRight: 0 }; // or some fallback
+    }
+
+    const angleLeft = Math.atan2(dy, dx + armLength) * (180 / Math.PI);
+    const angleRight = Math.atan2(dy, dx - armLength) * (180 / Math.PI);
+
+    return { angleLeft, angleRight };
+  };
+
+  // Function to draw an arm
+  const drawArm = (context, x1, y1, x2, y2) => {
+    context.beginPath();
+    context.moveTo(x1, y1);
+    context.lineTo(x2, y2);
+    context.strokeStyle = "black";
+    context.lineWidth = 5;
+    context.stroke();
+  };
+
+  // Drawing the canvas
+  const draw = () => {
+    const canvas = canvasRef.current;
+    const context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    const { angleLeft, angleRight } = calculateAngles(redDotPosition.x, redDotPosition.y);
+
+    // Calculate arm positions based on angles
+    const leftRodX = baseX + armLength * Math.cos((angleLeft * Math.PI) / 180);
+    const leftRodY = baseY + armLength * Math.sin((angleLeft * Math.PI) / 180);
+
+    const rightRodX = baseX + armLength * Math.cos((angleRight * Math.PI) / 180);
+    const rightRodY = baseY + armLength * Math.sin((angleRight * Math.PI) / 180);
+
+    // Draw the arms
+    drawArm(context, baseX, baseY, leftRodX, leftRodY);
+    drawArm(context, baseX, baseY, rightRodX, rightRodY);
+
+    // Draw the red dot (end-effector)
+    context.beginPath();
+    context.arc(redDotPosition.x, redDotPosition.y, 5, 0, 2 * Math.PI);
+    context.fillStyle = "red";
+    context.fill();
+  };
+
+  // Effect to draw on canvas when red dot position changes
   useEffect(() => {
-    const renderFrame = () => {
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
-        if (context) {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          drawReferenceLine(context, 50, 300, 550, 300);
-          let arm1result:AdjacentArm = drawServoArm(context, slider1, 200, 100); // first arm
-          let arm2result:AdjacentArm = drawServoArm(context, slider2, 400, 100); // second arm
-          drawAdjacentArm(context,slider1,slider2,arm1result);
-          drawAdjacentArm(context,slider1,slider2,arm2result);
-        } else {
-          throw new Error('Could not get context');
-        }
-      }
-    };
-    renderFrame(); // Call immediately instead of using requestAnimationFrame
-  }, [slider1, slider2]); // Depend on both slider1 and slider2
+    draw();
+  }, [redDotPosition]);
 
-  function drawReferenceLine(
-    context: CanvasRenderingContext2D,
-    startX: number,
-    startY: number,
-    endX: number,
-    endY: number
-  ): void {
-    context.beginPath();
-    context.moveTo(startX, startY);
-    context.lineTo(endX, endY);
-    context.lineWidth = 2;
-    context.strokeStyle = "white";
-    context.stroke();
-  }
-
-  function drawServoArm(context: CanvasRenderingContext2D, angle: number, x0: number, y0: number): { x:number ,y:number } {
-    const length = 100;
-    const angleInRadians = angle * (Math.PI / 180);
-    const x = x0 + length * Math.cos(angleInRadians);
-    const y = y0 + length * Math.sin(angleInRadians);
-    context.beginPath();
-    context.moveTo(x0, y0);
-    context.lineTo(x, y);
-    context.lineWidth = 5;
-    context.strokeStyle = "red";
-    context.stroke();
-    return { x, y }
-  }
-
-  function drawAdjacentArm(context:CanvasRenderingContext2D,angle1:number,angle2:number,armResult:AdjacentArm){
-    const length = 100;
-    const angleInRadians = angle1 * (Math.PI / 180);
-    const x = armResult.x + length * Math.cos(angleInRadians);
-    const y = armResult.y + length * Math.sin(angleInRadians);
-    context.beginPath();
-    context.moveTo(armResult.x, armResult.y);
-    context.lineTo(x, y);
-    context.lineWidth = 5;
-    context.strokeStyle = "red";
-    context.stroke();
-  }
+  // Handle mouse movement to update red dot position
+  const handleMouseMove = (e) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setRedDotPosition({ x, y });
+  };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div style={{ marginBottom: "10px", fontSize: "20px" }}>2D Canvas</div>
+    <div>
       <canvas
         ref={canvasRef}
-        width="600"
-        height="400"
+        width={300}
+        height={300}
+        onMouseMove={handleMouseMove}
         style={{ border: "1px solid black" }}
-      ></canvas>
-      <div style={{ marginTop: "10px", width: "100%" }}>
-        <Card>
-          <CardFooter style={{ marginTop: '1.5rem' }}>
-            <Slider
-              value={[slider1]}
-              min={10}
-              max={100}
-              step={1}
-              onValueChange={(value: number[]) => setSlider1(value[0])}
-            />
-            <Slider
-              style={{ marginLeft: '2rem' }}
-              value={[slider2]}
-              min={10}
-              max={100}
-              step={1}
-              onValueChange={(value: number[]) => setSlider2(value[0])}
-            />
-          </CardFooter>
-        </Card>
+      />
+      <div>
+        Move your mouse to position the red dot.
       </div>
     </div>
   );
-}
+};
+
+export default DeltaArmSimulationWeb;
