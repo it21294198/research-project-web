@@ -1,113 +1,91 @@
-"use client"; // Mark the component as a Client Component
+"use client";
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Slider } from "@/components/ui/slider";
-import {
-  Card,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardFooter } from "@/components/ui/card";
 
-type AdjacentArm = {
-  x : number,
-  y : number
-}
-
-export default function Canvas2D() {
-  const [slider1, setSlider1] = useState(0);
-  const [slider2, setSlider2] = useState(0);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+const DeltaArmSimulation = () => {
+  const canvasRef = useRef(null);
+  const [angle1, setAngle1] = useState(0);
+  const [angle2, setAngle2] = useState(0);
+  const [angle3, setAngle3] = useState(0);
 
   useEffect(() => {
-    const renderFrame = () => {
-      if (canvasRef.current) {
-        const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
-        if (context) {
-          context.clearRect(0, 0, canvas.width, canvas.height);
-          drawReferenceLine(context, 50, 300, 550, 300);
-          let arm1result:AdjacentArm = drawServoArm(context, slider1, 200, 100); // first arm
-          let arm2result:AdjacentArm = drawServoArm(context, slider2, 400, 100); // second arm
-          drawAdjacentArm(context,slider1,slider2,arm1result);
-          drawAdjacentArm(context,slider1,slider2,arm2result);
-        } else {
-          throw new Error('Could not get context');
-        }
-      }
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+
+    const drawArm = (startX, startY, angle1, angle2) => {
+      const len1 = 100;
+      const len2 = 100;
+      const x1 = startX + len1 * Math.cos(angle1);
+      const y1 = startY + len1 * Math.sin(angle1);
+      const x2 = x1 + len2 * Math.cos(angle1 + angle2);
+      const y2 = y1 + len2 * Math.sin(angle1 + angle2);
+
+      ctx.beginPath();
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = 'black';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      return [x2, y2];
     };
-    renderFrame(); // Call immediately instead of using requestAnimationFrame
-  }, [slider1, slider2]); // Depend on both slider1 and slider2
 
-  function drawReferenceLine(
-    context: CanvasRenderingContext2D,
-    startX: number,
-    startY: number,
-    endX: number,
-    endY: number
-  ): void {
-    context.beginPath();
-    context.moveTo(startX, startY);
-    context.lineTo(endX, endY);
-    context.lineWidth = 2;
-    context.strokeStyle = "white";
-    context.stroke();
-  }
+    const drawDeltaArm = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  function drawServoArm(context: CanvasRenderingContext2D, angle: number, x0: number, y0: number): { x:number ,y:number } {
-    const length = 100;
-    const angleInRadians = angle * (Math.PI / 180);
-    const x = x0 + length * Math.cos(angleInRadians);
-    const y = y0 + length * Math.sin(angleInRadians);
-    context.beginPath();
-    context.moveTo(x0, y0);
-    context.lineTo(x, y);
-    context.lineWidth = 5;
-    context.strokeStyle = "red";
-    context.stroke();
-    return { x, y }
-  }
+      // Draw base
+      ctx.beginPath();
+      ctx.moveTo(100, 50);
+      ctx.lineTo(700, 50);
+      ctx.strokeStyle = 'blue';
+      ctx.lineWidth = 4;
+      ctx.stroke();
 
-  function drawAdjacentArm(context:CanvasRenderingContext2D,angle1:number,angle2:number,armResult:AdjacentArm){
-    const length = 100;
-    const angleInRadians = angle1 * (Math.PI / 180);
-    const x = armResult.x + length * Math.cos(angleInRadians);
-    const y = armResult.y + length * Math.sin(angleInRadians);
-    context.beginPath();
-    context.moveTo(armResult.x, armResult.y);
-    context.lineTo(x, y);
-    context.lineWidth = 5;
-    context.strokeStyle = "red";
-    context.stroke();
-  }
+      // Draw arms
+      const endPoint1 = drawArm(200, 50, angle1 * Math.PI / 180, -angle1 * Math.PI / 180);
+      const endPoint2 = drawArm(400, 50, angle2 * Math.PI / 180, -angle2 * Math.PI / 180);
+      const endPoint3 = drawArm(600, 50, angle3 * Math.PI / 180, -angle3 * Math.PI / 180);
+
+      // Draw end effector
+      const centerX = (endPoint1[0] + endPoint2[0] + endPoint3[0]) / 3;
+      const centerY = (endPoint1[1] + endPoint2[1] + endPoint3[1]) / 3;
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 10, 0, 2 * Math.PI);
+      ctx.fillStyle = 'red';
+      ctx.fill();
+
+      // Draw connections to end effector
+      ctx.beginPath();
+      ctx.moveTo(endPoint1[0], endPoint1[1]);
+      ctx.lineTo(centerX, centerY);
+      ctx.moveTo(endPoint2[0], endPoint2[1]);
+      ctx.lineTo(centerX, centerY);
+      ctx.moveTo(endPoint3[0], endPoint3[1]);
+      ctx.lineTo(centerX, centerY);
+      ctx.strokeStyle = 'gray';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    };
+
+    drawDeltaArm();
+  }, [angle1, angle2, angle3]);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-      <div style={{ marginBottom: "10px", fontSize: "20px" }}>2D Canvas</div>
-      <canvas
-        ref={canvasRef}
-        width="600"
-        height="400"
-        style={{ border: "1px solid black" }}
-      ></canvas>
-      <div style={{ marginTop: "10px", width: "100%" }}>
-        <Card>
-          <CardFooter style={{ marginTop: '1.5rem' }}>
-            <Slider
-              value={[slider1]}
-              min={10}
-              max={100}
-              step={1}
-              onValueChange={(value: number[]) => setSlider1(value[0])}
-            />
-            <Slider
-              style={{ marginLeft: '2rem' }}
-              value={[slider2]}
-              min={10}
-              max={100}
-              step={1}
-              onValueChange={(value: number[]) => setSlider2(value[0])}
-            />
-          </CardFooter>
-        </Card>
-      </div>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <canvas ref={canvasRef} width={800} height={600} style={{ border: '1px solid black' }} />
+      <Card style={{ width: '100%', maxWidth: 800, marginTop: 20 }}>
+        <CardFooter>
+          <Slider value={[angle1]} min={-90} max={90} step={1} onValueChange={(value) => setAngle1(value[0])} />
+          <Slider value={[angle2]} min={-90} max={90} step={1} onValueChange={(value) => setAngle2(value[0])} style={{ marginLeft: '1rem' }} />
+          <Slider value={[angle3]} min={-90} max={90} step={1} onValueChange={(value) => setAngle3(value[0])} style={{ marginLeft: '1rem' }} />
+        </CardFooter>
+      </Card>
     </div>
   );
-}
+};
+
+export default DeltaArmSimulation;
