@@ -104,6 +104,11 @@ next-app/
     npx shadcn@latest add breadcrumb
     ```
 
+    11. Badge
+    ```
+    npx shadcn@latest add badge
+    ```
+
 ```
     servo 1    :   :     servo 2
                /   \
