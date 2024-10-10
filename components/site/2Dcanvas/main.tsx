@@ -9,7 +9,7 @@ const DeltaRobotSimulation = () => {
   const canvasRef = useRef(null);
   const [angle1, setAngle1] = useState(90);
   const [angle2, setAngle2] = useState(90);
-  const [baseWidth, setBaseWidth] = useState(360);
+  const [baseWidth, setBaseWidth] = useState(200);
   const [horizontalPosition, setHorizontalPosition] = useState(360);
   const [verticalPosition, setVerticalPosition] = useState(360);
 
@@ -183,11 +183,11 @@ const DeltaRobotSimulation = () => {
               <Badge variant="outline">{baseWidth}</Badge>
             </div>
             <div style={{display: 'grid', gridTemplateColumns : 'auto 2rem', gap : '1rem' }}>
-              <Slider value={[horizontalPosition]} min={0} max={600} step={1} onValueChange={changeHorizontalPosition} />
+              <Slider value={[horizontalPosition]} min={175} max={630} step={1} onValueChange={changeHorizontalPosition} />
               <Badge variant="outline">{horizontalPosition}</Badge>
             </div>
             <div style={{display: 'grid', gridTemplateColumns : 'auto 2rem', gap : '1rem' }}>
-              <Slider value={[verticalPosition]} min={0} max={600} step={1} onValueChange={changeVerticalPosition} />
+              <Slider value={[verticalPosition]} min={285} max={600} step={1} onValueChange={changeVerticalPosition} />
               <Badge variant="outline">{verticalPosition}</Badge>
             </div>
           </div>
