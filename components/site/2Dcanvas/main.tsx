@@ -55,7 +55,7 @@ const DeltaRobotSimulation = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Constants
-      const upperArmLength = 150;
+      const upperArmLength = 200;
       const lowerArmLength = 200;
       const baseY = 100;
       const canvasCenter = canvas.width / 2;
