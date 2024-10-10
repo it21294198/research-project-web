@@ -120,29 +120,30 @@ const DeltaRobotSimulation = () => {
     const canvasCenter = 400; // Half of canvas width
     const servo1X = canvasCenter - baseWidth / 2;
     const servo2X = canvasCenter + baseWidth / 2;
-
-    const calculateAngle = (servoX) => {
+  
+    const calculateAngle = (servoX, isServo1) => {
       const dx = x - servoX;
       const dy = y - baseY;
       const distance = Math.sqrt(dx * dx + dy * dy);
-
+  
       if (distance > upperArmLength + lowerArmLength) {
         return null; // Unreachable position
       }
-
+  
       const cosAngle = (upperArmLength * upperArmLength + distance * distance - lowerArmLength * lowerArmLength) / (2 * upperArmLength * distance);
       const angle = Math.acos(cosAngle);
       const baseAngle = Math.atan2(dy, dx);
-
-      return (baseAngle - angle) * 180 / Math.PI;
+  
+      // For servo1, we add the angle instead of subtracting
+      return isServo1 ? ((baseAngle + angle) * 180 / Math.PI) : ((baseAngle - angle) * 180 / Math.PI);
     };
-
-    const newAngle1 = calculateAngle(servo1X);
-    const newAngle2 = calculateAngle(servo2X);
-
+  
+    const newAngle1 = calculateAngle(servo1X, true);  // Pass true for servo1
+    const newAngle2 = calculateAngle(servo2X, false); // Pass false for servo2
+  
     return [newAngle1, newAngle2];
   };
-
+  
   const changeHorizontalPosition = (e) => {
     const newX = e[0];
     const [newAngle1, newAngle2] = calculateAngles(newX, verticalPosition);
@@ -152,7 +153,7 @@ const DeltaRobotSimulation = () => {
       setAngle2(newAngle2);
     }
   };
-
+  
   const changeVerticalPosition = (e) => {
     const newY = e[0];
     const [newAngle1, newAngle2] = calculateAngles(horizontalPosition, newY);
