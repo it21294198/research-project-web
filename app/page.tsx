@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux'
 import { toggleTheme } from './features/theme/themeSlice'  // adjust the import based on your file structure
 import { Button } from "@/components/ui/button"
 import Demo from "@/components/site/MovingLines/Demo";
+import NumberDemo from "@/components/site/MovingNumbers/NumberDemo";
 
 export default function Home() {
 
@@ -18,6 +19,7 @@ export default function Home() {
     <div className="grid grid-cols-1 content-center">
       <main className="">
         <Demo/>
+        <NumberDemo/>
       </main>
       <footer className="grid grid-cols-1 gap-3 pt-5">
           <a
