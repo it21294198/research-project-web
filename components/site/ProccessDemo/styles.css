@@ -1,0 +1,26 @@
+.rotated-container {
+  transform: rotate(-90deg);
+  transform-origin: center;
+  display: inline-block;
+}
+
+.rotated-image {
+  transform: rotate(90deg);
+  transform-origin: center;
+  display: inline-block;
+}
+
+.demo-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  row-gap: 10px;
+  place-items: center;
+  width: 600px;
+  padding-top: 25rem;
+}
+
+.container > svg {
+  height: 40px;
+  border-radius: 20px;
+  filter: grayscale(1) brightness(0.9);
+}
