@@ -21,10 +21,26 @@ const FlowDiagram = ({ data }: Props) => {
   const initBgColor = "#c9f1dd";
 
   const initialEdges = [
-    { id: "e1-2a", source: "1", target: "2", animated: true },
-    { id: "e1-2b", source: "2", target: "1", animated: true },
+    {
+      id: "e1-2a",
+      source: "1",
+      target: "2",
+      animated: true,
+    },
+    {
+      id: "e1-2b",
+      source: "2",
+      target: "1",
+      animated: true,
+    },
 
-    { id: "e2-3a", source: "2", target: "3", animated: true },
+    {
+      id: "e2-3a",
+      source: "2",
+      target: "3",
+      animated: true,
+      type: "animatedSvg",
+    },
     { id: "e2-3b", source: "3", target: "2", animated: true },
 
     { id: "e2-4a", source: "2", target: "4", animated: true },
