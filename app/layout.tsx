@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import ClientWrapper from './ClientWrapper'; // We'll create this component
+import ClientWrapper from "./ClientWrapper";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,8 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      {/* <body className={`${geistSans.variable} ${geistMono.variable} antialiased dark`}> */}
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-600`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-600`}
+      >
         <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
