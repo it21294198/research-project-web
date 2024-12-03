@@ -4,18 +4,18 @@ type LinesProps = {
   lineCount: number;
 };
 
-export default function ReturnLines({ returnLineCount }: LinesProps) {
+export default function ReturnLines({ lineCount }: LinesProps) {
   const width = 500;
   const height = 200;
-  const count = returnLineCount;
+  const count = lineCount;
 
   return (
     <svg
-    width="100%"
-    height={height}
-    viewBox={`0 0 ${width} ${height}`}
-    preserveAspectRatio="xMidYMid meet"
-    style={{ transform: "rotate(-180deg)" }}
+      width="100%"
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="xMidYMid meet"
+      style={{ transform: "rotate(-180deg)" }}
     >
       <defs>
         <mask id="curveMask">
