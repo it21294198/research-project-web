@@ -26,6 +26,7 @@ const FlowDiagram = ({ data }: Props) => {
       source: "1",
       target: "2",
       animated: true,
+      type: "animatedSvg",
     },
     {
       id: "e1-2b",
