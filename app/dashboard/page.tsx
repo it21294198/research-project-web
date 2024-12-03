@@ -9,6 +9,17 @@ import { LoaderCircle } from "lucide-react";
 const Dashboard = () => {
   const { data, isLoading, isError } = useFetchMetrics();
 
+  const tstObj = {
+    one: true,
+    two: true,
+    three: false,
+    four: false,
+    five: false,
+    six: false,
+    time: "1732996897",
+    error: "",
+  };
+
   if (isLoading) {
     return (
       <div className="flex flex-1 justify-center items-center h-full w-full">
@@ -27,7 +38,7 @@ const Dashboard = () => {
       <h2 className="text-white">Performance metrics</h2>
       {isError && <div>Error fetching data</div>}
       <div className="flex flex-1 w-full h-full justify-center items-center gap-x-8 ">
-        <FlowDiagram data={data} />
+        <FlowDiagram data={data ?? tstObj} />
         <PerformanceNotifications data={data} isLoading={isLoading} />
       </div>
     </main>
