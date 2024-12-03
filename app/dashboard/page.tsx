@@ -7,7 +7,7 @@ import PerformanceNotifications from "@/components/metrics/notifications";
 import { LoaderCircle } from "lucide-react";
 
 const Dashboard = () => {
-  const { data, isLoading, isError } = useFetchMetrics();
+  const { data, isLoading, isError, error } = useFetchMetrics();
 
   const tstObj = {
     one: true,
@@ -26,6 +26,12 @@ const Dashboard = () => {
         <LoaderCircle className="animate-spin" color="#fff" />
       </div>
     );
+  }
+
+  if (isError) {
+    console.log("Error fetching data", error);
+
+    return <div>Error fetching data</div>;
   }
 
   return (
