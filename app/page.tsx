@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { toggleTheme } from "./features/theme/themeSlice";
 import { Button } from "@/components/ui/button";
 import Demo from "@/components/site/MovingLines/Demo";
-import NumberDemo from "@/components/site/MovingNumbers/NumberDemo";
 import Link from "next/link";
 
 export default function Home() {
@@ -18,7 +17,7 @@ export default function Home() {
     <div className="grid grid-cols-1 content-center">
       <main className="">
         <Demo />
-        <NumberDemo />
+        {/* <NumberDemo /> */}
       </main>
       <footer className="grid grid-cols-1 gap-3 pt-5">
         <Link
