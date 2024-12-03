@@ -1,8 +1,6 @@
 "use client";
 
-import React, { useCallback } from "react";
 import {
-  addEdge,
   Background,
   Controls,
   Position,
@@ -14,23 +12,13 @@ import "@xyflow/react/dist/style.css";
 import { AnimatedSVGEdge } from "./animatedSVGEdge";
 import { IRoverMetrics } from "@/interfaces/metrics.interface";
 
-const CustomNode = ({ data }) => (
-  <div style={{ textAlign: "center" }}>
-    <div style={{ background: "#ddd", borderRadius: "50%", padding: "10px" }}>
-      {/* Placeholder Icon */}
-      🛠️
-    </div>
-    <div>{data.label}</div>
-  </div>
-);
-
 type Props = {
   data: IRoverMetrics;
 };
 
 const FlowDiagram = ({ data }: Props) => {
+  console.log("🚀 ~ FlowDiagram ~ data:", data);
   const initBgColor = "#c9f1dd";
-  const snapGrid: [number, number] = [20, 20];
 
   const initialEdges = [
     { id: "e1-2a", source: "1", target: "2", animated: true },
@@ -79,7 +67,9 @@ const FlowDiagram = ({ data }: Props) => {
     },
   ];
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   //   const nodeTypes = { custom: CustomNode };
@@ -103,6 +93,7 @@ const FlowDiagram = ({ data }: Props) => {
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
+        edgeTypes={edgeTypes}
         fitView={true}
         style={{ backgroundColor: "#F7F9FB", borderRadius: "10px" }}
       >

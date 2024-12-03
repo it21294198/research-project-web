@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useDispatch } from "react-redux";
 import { toggleTheme } from "./features/theme/themeSlice";
 import { Button } from "@/components/ui/button";

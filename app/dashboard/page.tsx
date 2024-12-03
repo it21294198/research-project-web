@@ -9,17 +9,6 @@ import { LoaderCircle } from "lucide-react";
 const Dashboard = () => {
   const { data, isLoading, isError } = useFetchMetrics();
 
-  const testObject = {
-    one: true,
-    two: true,
-    three: false,
-    four: false,
-    five: false,
-    six: false,
-    time: "1732996897",
-    error: "",
-  };
-
   if (isLoading) {
     return (
       <div className="flex flex-1 justify-center items-center h-full w-full">
