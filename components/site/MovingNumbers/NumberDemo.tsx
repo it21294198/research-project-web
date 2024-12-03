@@ -1,6 +1,8 @@
-import MotionNumber from 'motion-number';
-import React, { useState, useEffect } from 'react';
-import { easeOut } from 'framer-motion'
+"use client";
+
+import MotionNumber from "motion-number";
+import React, { useState, useEffect } from "react";
+import { easeOut } from "framer-motion";
 
 export default function NumberDemo() {
   const [numberValue, setNumberValue] = useState(new Date().getSeconds());
@@ -19,24 +21,24 @@ export default function NumberDemo() {
     <div>
       <MotionNumber
         value={numberValue}
-        format={{ notation: 'compact' }} // Intl.NumberFormat() options
+        format={{ notation: "compact" }} // Intl.NumberFormat() options
         locales="en-US" // Intl.NumberFormat() locales
       />
-      <hr/>
+      <hr />
       <MotionNumber
         value={numberValue}
-        format={{ notation: 'compact' }} // Intl.NumberFormat() options
+        format={{ notation: "compact" }} // Intl.NumberFormat() options
         locales="en-US" // Intl.NumberFormat() locales
         transition={{
-            // Applied to layout animations on individual characters:
-            layout: { type: 'spring', duration: 0.7, bounce: 0 },
-            // Used for the digit animations:
-            y: { type: 'spring', duration: 0.7, bounce: 0.25 },
-    
-            // Opacity applies to entering/exiting characters.
-            // Note the use of the times array, explained below:
-            opacity: { duration: 0.7, ease: easeOut, times: [0, 0.3] } // 0.3s perceptual duration
-        }}    
+          // Applied to layout animations on individual characters:
+          layout: { type: "spring", duration: 0.7, bounce: 0 },
+          // Used for the digit animations:
+          y: { type: "spring", duration: 0.7, bounce: 0.25 },
+
+          // Opacity applies to entering/exiting characters.
+          // Note the use of the times array, explained below:
+          opacity: { duration: 0.7, ease: easeOut, times: [0, 0.3] }, // 0.3s perceptual duration
+        }}
       />
     </div>
   );
